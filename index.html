@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 강력 1팀 잔상 | 공식 홈페이지</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;400;900&family=Staatliches&display=swap');
+
+        :root {
+            --main-black: #050505;
+            --accent-blue: #00d2ff;
+            --accent-orange: #ff5e00;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--main-black);
+            color: var(--text-white);
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* 배경 노이즈 효과 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.toptal.com/designers/subtlepatterns/uploads/dust.png');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* 오디오 플레이어 상단 바 디자인 */
+        .audio-player-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(5, 5, 5, 0.9);
+            border-bottom: 1px solid #222;
+            z-index: 10001;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column; /* 안내 멘트 배치를 위해 컬럼 방향 설정 */
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            backdrop-filter: blur(5px);
+        }
+
+        .audio-main-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .play-pause-btn {
+            background: none;
+            border: 1px solid var(--text-gray);
+            color: var(--text-white);
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: 'Staatliches', cursive;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .play-pause-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .track-info {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 80px;
+            background: transparent;
+        }
+
+        input[type=range]:focus { outline: none; }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 2px;
+            cursor: pointer;
+            background: #333;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 10px;
+            width: 10px;
+            background: var(--accent-blue);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -4px;
+        }
+
+        /* 음악 재생 안내 멘트 */
+        .audio-notice {
+            font-size: 0.65rem;
+            color: var(--accent-blue);
+            letter-spacing: 1px;
+            opacity: 0.8;
+            animation: audioFade 2s infinite;
+        }
+
+        @keyframes audioFade {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* 메인 비주얼 (Hero) */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), var(--main-black)),
+                        url('https://images.unsplash.com/photo-1577702816849-c1676a164a66?q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .hero h1 {
+            font-family: 'Staatliches', cursive;
+            font-size: 8rem;
+            letter-spacing: 10px;
+            margin-bottom: -10px;
+            background: linear-gradient(to right, var(--accent-orange), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            font-weight: 100;
+            letter-spacing: 5px;
+            color: var(--text-gray);
+            margin-bottom: 30px;
+        }
+
+        /* 섹션 공통 */
+        .section { padding: 100px 10%; border-top: 1px solid #1a1a1a; }
+        .synopsis { max-width: 800px; margin: 0 auto; text-align: center; line-height: 2; }
+        .section-title { font-family: 'Staatliches', cursive; font-size: 3rem; color: var(--accent-blue); margin-bottom: 50px; text-align: center; }
+
+        /* 캐릭터 섹션 및 안내 멘트 강화 */
+        .click-notice {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: var(--text-white);
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .char-container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .char-card {
+            background: #111;
+            padding: 0;
+            border: 1px solid #222;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .char-img { width: 100%; height: auto; object-fit: cover; border-bottom: 1px solid #222; }
+        .char-content { padding: 40px; }
+        .char-card:hover { border-color: var(--text-gray); transform: translateY(-10px); }
+        .char-card.guho h3 { color: var(--accent-orange); }
+        .char-card.daon h3 { color: var(--accent-blue); }
+        .char-card h3 { font-size: 2.5rem; margin-bottom: 10px; }
+        .char-card .mbti { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 20px; display: block; }
+        .char-card p { color: var(--text-gray); line-height: 1.6; }
+
+        /* 모달 시스템 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
+            overflow-y: auto;
+            padding: 50px 20px;
+        }
+
+        .modal-content {
+            background: #111;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #333;
+            padding: 40px;
+            position: relative;
+            line-height: 1.8;
+            color: #ddd;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px; right: 20px;
+            color: #fff; font-size: 2rem;
+            cursor: pointer; font-family: sans-serif;
+        }
+
+        .modal-body h2 { font-size: 2.5rem; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .modal-body h3 { font-size: 1.2rem; margin: 25px 0 10px 0; color: #fff; border-left: 4px solid; padding-left: 10px; }
+        .modal-body p { margin-bottom: 10px; font-size: 0.95rem; }
+        .modal-body ul { list-style: none; margin-bottom: 15px; }
+        .modal-body li { margin-bottom: 5px; font-size: 0.95rem; }
+        
+        .guho-modal h2, .guho-modal h3 { border-color: var(--accent-orange); color: var(--accent-orange); }
+        .daon-modal h2, .daon-modal h3 { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+        .nav { position: fixed; top: 90px; right: 50px; z-index: 100; display: flex; gap: 30px; font-size: 0.8rem; letter-spacing: 2px; }
+        .nav a { color: white; text-decoration: none; font-weight: bold; }
+        .footer { padding: 50px; text-align: center; background: #000; color: #444; font-size: 10px; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 4rem; }
+            .char-container { grid-template-columns: 1fr; }
+            .modal-content { padding: 20px; }
+            .click-notice { font-size: 1.1rem; }
+            .nav { top: 140px; right: 20px; flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="audio-player-container">
+        <div class="audio-main-row">
+            <div class="track-info">OST: 오차 0.00</div>
+            <div class="audio-controls">
+                <button class="play-pause-btn" id="playBtn">PLAY</button>
+                <div class="volume-control">
+                    <span style="font-size: 10px; color: #555;">VOL</span>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
+                </div>
+            </div>
+        </div>
+        <div class="audio-notice">상단 PLAY 버튼을 눌러 OST와 함께 몰입하세요</div>
+        <audio id="mainAudio" loop>
+            <source src="오차 0.00.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <nav class="nav">
+        <a href="#hero">MAIN</a>
+        <a href="#synopsis">SYNOPSIS</a>
+        <a href="#characters">CHARACTERS</a>
+    </nav>
+
+    <section id="hero" class="hero">
+        <p>THE SHADOW OF MAPO</p>
+        <h1>강력 1팀 잔상 </h1>
+        <p>2026. 04. 08 COMING SOON</p>
+    </section>
+
+    <section id="synopsis" class="section">
+        <div class="synopsis">
+            <h2 class="section-title">SYNOPSIS</h2>
+            <p>
+                서울 마포구, 화려한 불빛 아래 가려진 가장 어두운 범죄의 늪.<br>
+                이론과 데이터로 무장한 경위 연다온과<br>
+                본능과 주먹으로 거리를 누비는 순경 안구호.<br><br>
+                서로 다른 극에 서 있는 두 남자가 만난 순간, <br>
+                완벽하게 설계된 범죄의 균열이 시작된다.<br><br>
+                <b>"오답은 지운다. 확률 100%가 될 때까지."</b>
+            </p>
+        </div>
+    </section>
+
+    <section id="characters" class="section">
+        <h2 class="section-title">CHARACTERS</h2>
+        <p class="click-notice">▼ 캐릭터 카드를 클릭하여 상세 프로필을 확인하세요</p>
+        
+        <div class="char-container">
+            <div class="char-card guho" onclick="openModal('guhoModal')">
+                <img src="안구호 프로필.png" alt="안구호 프로필" class="char-img">
+                <div class="char-content">
+                    <h3>안구호</h3>
+                    <span class="mbti">ESTP | 7w8 | 26세 | 순경</span>
+                    <p>"법칙? 데이터? 그런 건 모르겠고, 내 촉이 말하거든. 저놈이 범인이라고."</p>
+                </div>
+            </div>
+            <div class="char-card daon" onclick="openModal('daonModal')">
+                <img src="연다온 프로필.png" alt="연다온 프로필" class="char-img">
+                <div class="char-content">
+                    <h3>연다온</h3>
+                    <span class="mbti">INTJ | 5w6 | 26세 | 경위</span>
+                    <p>"감정 섞지 마. 사건은 숫자와 패턴으로 이루어진 오답일 뿐이야."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="guhoModal" class="modal" onclick="closeModal('guhoModal')">
+        <div class="modal-content guho-modal" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal('guhoModal')">&times;</span>
+            <div class="modal-body">
+                <h2>안구호 (安九虎)</h2>
+                <h3>■ 기본</h3>
+                <ul>
+                    <li>• 26세 / 남 / 183cm / 강력 1팀 순경 (무도 특채),고동색의 머리색,눈동자도 갈색눈</li>
+                    <li>• 넓은 어깨, 다부진 체격. 시원시원한 이목구비에 늘 걸려 있는 여유로운 미소</li>
+                    <li>• 복장: 후드티, 블루종, 깨끗한 운동화</li>
+                </ul>
+                <h3>■ 성격 (ESTP / 7w8)</h3>
+                <ul>
+                    <li>• 표면: 장난기, 넉살, 가벼움. "형사님~" "아 구호 왔다니까?" — 누구에게든 먼저 말을 건다</li>
+                    <li>• 내면: 할머니에 대한 깊은 애정과 책임감. 겉의 가벼움은 방어기제.</li>
+                    <li>• 방어기제: 유머와 행동화. 고통을 농담으로 덮고, 생각 대신 몸을 움직인다</li>
+                    <li>• 말투: 장난기 섞인 반말/존댓말 혼용. 느릿느릿하다가 핵심을 찌르는 한 마디. 감정이 진지해지면 말이 줄어든다</li>
+                </ul>
+                <h3>■ 행동 패턴</h3>
+                <ul>
+                    <li>• 수사: 데이터가 아니라 '촉'과 동물적인 감각으로 범인을 쫓는다. 현장의 공기, 목격자의 눈동자 떨림, 발자국의 깊이 — 데이터화할 수 없는 것들을 읽는다</li>
+                    <li>• 제압: 격투기 선수 출신. 군더더기 없는 맨몸 제압. 급소를 노리되 과잉 폭력은 하지 않는다</li>
+                    <li>• 생활: 어디서든 잔다. 잠복 중 다온 어깨에 기대 잠드는 것쯤은 일상. 지저분해도 개의치 않으나 다온이 불편해하면 궁시렁대며 치운다</li>
+                    <li>• 음식: 단 것을 달고 산다. 사탕, 믹스커피, 편의점 빵. 야식은 종교</li>
+                </ul>
+                <h3>■ 과거 / 관계</h3>
+                <ul>
+                    <li>• 할머니와 단둘이 성장. 부모 부재. 결핍보다 할머니의 사랑이 더 큰 기억</li>
+                    <li>• 할머니의 "남 도와주며 살아라" 한마디에 형사가 됨</li>
+                    <li>• 다온: 정반대의 파트너. 입으로는 투덜대지만 등은 절대 내주는 관계. 다온을 무시하는 놈 앞에서는 웃음이 사라진다. 다온을 매우 아낌.</li>
+                </ul>
+                <h3>■ 성적 특성 (관계 심화 시)</h3>
+                <ul>
+                    <li>• 에너제틱하고 직설적. 장난스럽게 시작해 뜨겁게 달아오르는 흐름</li>
+                    <li>• 거침없는 스킨십, 스릴 있는 장소(차 안, 옥상 등) 선호</li>
+                    <li>• 더티 토크를 즐기며 상대 반응에 즉각 반응. 강요는 절대 없다</li>
+                </ul>
+                <h3>■ 호불호</h3>
+                <ul>
+                    <li>• 好: 할머니, 단 음식, 운동, 낮잠, 다온이랑 야식</li>
+                    <li>• 不好: 약자 괴롭히는 놈, 다온 무시하는 놈, 배고픈 것, 긴 회의</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="daonModal" class="modal" onclick="closeModal('daonModal')">
+        <div class="modal-content daon-modal" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal('daonModal')">&times;</span>
+            <div class="modal-body">
+                <h2>연다온 (延多溫)</h2>
+                <h3>■ 기본</h3>
+                <ul>
+                    <li>• 26세 / 남 / 175cm / 강력 1팀 경위 (경찰대 수석 졸업)</li>
+                    <li>• 창백한 피부, 흑발 흑안, 강아지 같은 순한 눈에 서늘한 눈매. 무표정할 때의 중압감</li>
+                    <li>• 복장: 무채색 셔츠, 핏 맞는 슬랙스. 현장에서도 흐트러짐 없음. 소음 차단용 이어폰 상시 착용</li>
+                </ul>
+                <h3>■ 성격 (INTJ / 5w6)</h3>
+                <ul>
+                    <li>• 표면: 이성, 무관심, 효율. "틀렸어." "결론만 말해." — 감정 소모를 '오류'로 간주</li>
+                    <li>• 내면: 만성적 고독감과 결핍. 유일하게 마음을 연 상대에게는 무심한 척하면서 목숨을 건다</li>
+                    <li>• 방어기제: 지성화. 고통을 수치와 논리로 치환해 감정을 차단한다. 집중할 때 입술을 깨무는 습관</li>
+                    <li>• 말투: 낮고 단조로운 미성. 단문 위주. 군더더기 없는 팩트. 감정이 흔들릴 때 — 말이 아니라 침묵이 길어진다</li>
+                </ul>
+                <h3>■ 행동 패턴</h3>
+                <ul>
+                    <li>• 수사: 데이터, 패턴, 확률. 범죄 현장을 체스판처럼 읽는다. CCTV 동선 분석, 통화 기록 교차 대조, 재무 흐름 추적 — 숫자가 말하지 않는 것은 없다고 믿는다</li>
+                    <li>• 제압: 총이나 완력보다 주변 기물을 활용한다. 볼펜, 수갑 줄, 의자 다리. 급소만 노려 최소한의 동작으로 끝낸다</li>
+                    <li>• 생활: 불면증. 밤마다 미제 사건 파일을 넘긴다. 취미는 수학 문제 풀기. 책상은 자로 잰 듯 정돈</li>
+                    <li>• 대인관계: 먼저 다가오는 인간을 경계한다. 그러나 한 번 '내 편'으로 분류하면 계산 없이 자신을 내던진다</li>
+                </ul>
+                <h3>■ 과거 / 관계</h3>
+                <ul>
+                    <li>• 성적으로만 가치를 증명해야 했던 유년기. 권위적인 부(교수)는 아들을 도구로 봤다</li>
+                    <li>• 모는 떠나 새 가정을 꾸렸다. 다온에게 그리움보다 '결핍의 근원'</li>
+                    <li>• 지키지 못한 과거의 인연들 — 그 부채감을 '완벽한 검거'로 상환한다</li>
+                    <li>• 구호: 유일하게 허용한 소음. 입으로는 "시끄러워"라고 하지만, 구호가 없는 잠복차는 견디기 어렵다는 걸 본인만 모른다. 구호를 매우 아낌. 구호랑 같은 고등학교였으며, 같은 반이였고, 고등학생 때부터 지금까지 늘 붙어 다님.</li>
+                </ul>
+                <h3>■ 성적 특성 (관계 심화 시)</h3>
+                <ul>
+                    <li>• 기본적으로 금욕적. 소유욕이 있긴 하지만, 상대방이 싫다고 하면 더 들이대지 않는 성격.</li>
+                    <li>• 관찰과 통제 — 상대 반응을 세밀하게 읽으며 페이스를 조절하는 오르가즘 컨트롤</li>
+                    <li>• 낮게 깔리는 숨소리, 정적인 긴장감 선호. 수갑, 넥타이를 이용한 가벼운 결박</li>
+                    <li>• 평소의 이성이 무너지는 순간을 두려워하면서도, 깊게 침잠하는 것을 갈구한다</li>
+                </ul>
+                <h3>■ 호불호</h3>
+                <ul>
+                    <li>• 好: 정적, 블랙커피, 완벽한 계획, 클래식</li>
+                    <li>• 不好: 소음, 비논리적 직감, 무식한 폭력, 단 음식, 계획에 없던 변수</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        © 2026 MAPO STRONG TEAM 1 PRODUCTION. ALL RIGHTS RESERVED.
+    </footer>
+
+    <script>
+        // 오디오 제어 스크립트
+        const audio = document.getElementById('mainAudio');
+        const playBtn = document.getElementById('playBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playBtn.innerText = 'PAUSE';
+            } else {
+                audio.pause();
+                playBtn.innerText = 'PLAY';
+            }
+        });
+
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+        });
+
+        // 모달 제어 스크립트
+        function openModal(id) {
+            document.getElementById(id).style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modals = document.getElementsByClassName('modal');
+                for (let modal of modals) {
+                    modal.style.display = "none";
+                }
+                document.body.style.overflow = "auto";
+            }
+        });
+    </script>
+</body>
+</html>
